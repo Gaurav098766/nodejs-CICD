@@ -8,25 +8,25 @@ phases:
 pre_build:
   commands:
     - echo Logging in to Amazon ECR...
-    - echo $AWS_ACCOUNT_ID - $AWS_DEFAULT_REGION - $IMAGE_REPO_NAME - $IMAGE_TAG
+    - echo $AWS_ACCOUNT_ID - $AWS_DEFAULT_REGION - $IMAGE_REPO_NAME - $BUILD_NUMBER
     - aws --version
     - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
     - export REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
     - echo Build started on `date`
     - echo Building the Docker image...
-    - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG ./microservice
-    - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $REPOSITORY_URI:$BUILD_NUMBER
+    - docker build -t $IMAGE_REPO_NAME:$BUILD_NUMBER ./microservice
+    - docker tag $IMAGE_REPO_NAME:$BUILD_NUMBER $REPOSITORY_URI:$BUILD_NUMBER
 
 build:
   commands:
     - echo Pushing the Docker image to ECR...
-    - echo $REPOSITORY_URI:$IMAGE_TAG
-    - docker push $REPOSITORY_URI:$IMAGE_TAG
+    - echo $REPOSITORY_URI:$BUILD_NUMBER
+    - docker push $REPOSITORY_URI:$BUILD_NUMBER
 
 post_build:
   commands:
     - echo Build completed on `date`
-    - echo Deploying new task definition $IMAGE_TAG to ECS cluster...
+    - echo Deploying new task definition $BUILD_NUMBER to ECS cluster...
     - echo ECS_CLUSTER_NAME - $ECS_CLUSTER_NAME, ECS_SERVICE_NAME - $ECS_SERVICE_NAME
     - aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --force-new-deployment
     - echo ECS service $ECS_SERVICE_NAME updated
