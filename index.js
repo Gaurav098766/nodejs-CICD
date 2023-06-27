@@ -4,7 +4,7 @@ const port=5000
 const app=express();
 
 app.get('/',(req,res)=>{
-    res.send('Hello!! this is running, I have completed codecommit code build task nfdsihfisdhfisdo')
+    res.send('Hello!! this is running, I have completed codecommit code build task')
 })
 
 app.listen(port,()=>{
