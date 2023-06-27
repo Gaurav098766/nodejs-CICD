@@ -14,7 +14,7 @@ pre_build:
     - export REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
     - echo Build started on `date`
     - echo Building the Docker image...
-    - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG ./microservice_app
+    - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG ./microservice
     - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
 
 build:
